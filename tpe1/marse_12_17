@@ -63,7 +63,14 @@ Formas de mitigar y/o evitar el error:
   Análisis manual estático/dinámico: Puede ser efectivo para detectar el uso de ciertas funciones y permisos, luego el analista puede ver estas funciones y permisos y hacer evluarlas.
   Caja negra: Se usa cuando no se tiene el código fuente, puede servir para detectar errores de privilegios y acceso no permitido.
 
-
-
 5. Nivel de vulnerabilidad y consecuencias posibles de un exploit sobre ese error.
+  Vulnerabilidad: Alta.
+  Consecuencias: Perdida de información, ejecución de código indeseado.
+
 6. Formas de mitigar y/o evitar el error.
+  Cuando se usa un recurso crítico, chequear que este tenga los permisos correctos.
+  A nivel arquitectura de aplicación, definir areas o roles de usuario, definir estrictamente los permisos, grupos y privilegios de cada rol/area y que estos estén definidos en un solo lugar.
+  Para que menos archivos estén en peligro, correr la aplicación en un ambiente virtualizado, aunque los archivos que cree la aplicación en este ambiente serán igualmente sujetos a errores.
+  Cuando se instala o arranca el programa, setear las máscaras de archivos a lo más restrictivo posible para el que programa corra.
+  Para todos los archivos ejecutables, de configuración y librerías, hacer que solo se puedan leer y escribir por el administrador del sistema.
+  No asumir que el que ejecute el programa va a hacer los cambios listados en la documentación, hacerlo uno mismo.
