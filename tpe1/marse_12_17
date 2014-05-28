@@ -1,0 +1,69 @@
+Error 12: Cross-Site request forgery (CSRF)
+
+Descripción del error:
+Los Cross-Site request forgery son un tipo de ataque en el que requests "maliciosos" son enviados por un usuario logueado y confirmado.
+La diferencia con cross-site scripting, es que en CSRF, se aprovecha la confianza que el sitio tiene en el usuario, mientras que en XSS, se toma provecho de la confianza del usuario por el sitio.
+
+Detalles técnicos del error:
+Se puede ejecutar en cualquier browser o sitio que importe recursos directamente de otros usuarios y no los valide o que importe recursos de manera insegura.
+
+Características típicas:
+  Se da en sitios que dependen de la identidad del usuario
+  Sacan ventaja de la confianza del sitio en la identidad del usuario
+  Hacen que el browser del usuario mande requests HTTP a un sitio conveniente
+  Estas requests tienen efectos colaterales o dañinos
+
+Ejemplos de código (Fuente: wikipedia)
+Alice está en una sala de chat en la que se encuentra Mallory, Mallory le manda una imagen a Alice de la siguiente manera:
+Mallory: Hola Alice! Mirá el perrito que me compré:
+   <img src="http://bank.example.com/withdraw?account=Alice&amount=1000000&for=Mallory">
+
+Si el banco de Alicia guarda la información en una cookie, el form para sacar plata se va a enviar con la información de la cookie, autorizando la transacción.
+
+Métodos de detección:
+  Para detectar este error, hace falta checkear en todos los links y forms de la aplicación para corroborar que posean y validen un token impredecible, si no es así, el sitio puede y podrá ser victima de CSRF.
+
+
+Nivel de vulnerabilidad y consecuencias posibles de un exploit sobre ese error:
+  Nivel de vulnerabilidad: Alto, es un ataque sencillo si se encuentra un request que posea valor para el atacante.
+  Consecuencias: Se puede perder información, Dejar que se ejecute código no deseado en nuestro servidor.
+
+Formas de mitigar y/o evitar el error:
+  Usar librerías o frameworks que no permiten que este error ocurra.
+  Asegurarse de que la aplicación esté libre de XSS
+  La mayoría de la gente lo soluciona poniendo un token en el form y en la cookie de session. De esta manera se envían los 2 tokens en cada request y se chequea que sean válidos. El token debe ser difícil de "adivinar".
+  BUEN DISEÑO WEB: No usar GET para acciones que modifiquen el estado del servidor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+17: Asignación de permisos incorrectos para recursos críticos
+
+1. Descripción del error.
+  Cuando a un recurso se le dan más permisos de los que se debería, este queda expuesto a ser modificado por estos actores indeseados. Esto es peligroso cuando este recurso es configuración del programa, datos de ejecución del mismo, o infomación de usuarios sensible.
+
+2. Detalles técnicos del error. Entre otros, plataforma y lenguajes donde puede presentarse.
+  No depende del lenguaje de programación, se puede dar en cualquier sistema operativo.
+
+3. Ejemplos de código.
+  Todos los ejemplos de código son básicamente crear archivos con los permisos mal, por lo que otro usuario podría venir y leer datos críticos y modificar datos de configuración.
+
+4. Métodos de detección.
+  Análisis estático/dinámico automatizado: Sirve para detectar llamadas a funciones que pueden tener permisos inválidos, pero como los permisos para cada cosa dependen del programa, puede devolver falsos positivos.
+  Análisis manual: Se puede detectar con este análisis, sobre todo cuando el error tiene reglas de negocio asociadas.
+  Análisis manual estático/dinámico: Puede ser efectivo para detectar el uso de ciertas funciones y permisos, luego el analista puede ver estas funciones y permisos y hacer evluarlas.
+  Caja negra: Se usa cuando no se tiene el código fuente, puede servir para detectar errores de privilegios y acceso no permitido.
+
+
+
+5. Nivel de vulnerabilidad y consecuencias posibles de un exploit sobre ese error.
+6. Formas de mitigar y/o evitar el error.
