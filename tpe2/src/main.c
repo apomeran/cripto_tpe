@@ -19,7 +19,8 @@ int extract_image(){
 	int i;
 	struct data* image = read_image("g.bmp");
 	for (i=0; i < height * width; i++){
-			//printf("", image->bytes[i]);
+			printf("%d", image->bytes[i]);
 	}
+        
 	return 0;
 }
