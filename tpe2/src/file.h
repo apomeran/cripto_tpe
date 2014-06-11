@@ -3,6 +3,8 @@
 
 #include "common.h"
 
-struct data* read_image(const char* filename);
-
+BITMAPIMAGE* read_image(const char*);
+void write_image(BITMAPIMAGE*);
+void file_error(FILE*);
+void printImage(BITMAPIMAGE* img);
 #endif

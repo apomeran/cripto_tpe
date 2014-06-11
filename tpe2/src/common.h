@@ -31,13 +31,13 @@ typedef struct tagBITMAPFILEHEADER {
   DWORD bfSize;
   WORD  bfReserved1;
   WORD  bfReserved2;
-  DWORD bfOffBits;
+  DWORD bfOffBits; //THIS IS THE ONE THAT CARES!
 } BITMAPFILEHEADER, *PBITMAPFILEHEADER;
 
 typedef struct tagIMAGE{
 	BITMAPFILEHEADER file_header;
 	BITMAPINFOHEADER info_header;
-	unsigned char* data;
+	unsigned char* bytes;
 } BITMAPIMAGE;
 #pragma pack(pop)
 #endif
