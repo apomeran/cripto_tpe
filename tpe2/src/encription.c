@@ -43,10 +43,10 @@ void k_2_encode(BITMAPIMAGE** imgs, BITMAPIMAGE* img_to_encript, int image_count
             decal_first_byte = imgs[current_image]->bytes[index] >> decal;
             decal_second_byte = imgs[current_image]->bytes[index + 1] >> decal;
             result = (decal_first_byte * enc_first_byte + decal_second_byte * enc_second_byte) % 251;
-            images[current_image]->bitmap[index] &= 0xF0;
-            images[current_image]->bitmap[index] |= result & 0X0F;
-            images[current_image]->bitmap[index + 1] &= 0xF0;
-            images[current_image]->bitmap[index + 1] |= result & 0X0F;
+            imgs[current_image]->bytes[index] &= 0xF0;
+            imgs[current_image]->bytes[index] |= result & 0X0F;
+            imgs[current_image]->bytes[index + 1] &= 0xF0;
+            imgs[current_image]->bytes[index + 1] |= result & 0X0F;
         }
 
     }
