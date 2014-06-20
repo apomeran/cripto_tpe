@@ -10,6 +10,7 @@ typedef struct tagImage{
 	byte* bytes;
 	int size;
 	int offset;
+	char* id;
 }image_t;
 
 //Modular Inverses

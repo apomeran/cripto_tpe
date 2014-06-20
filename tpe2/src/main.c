@@ -4,24 +4,18 @@
 #include "common.h"
 #include "file.h"
 
-int extract_image();
+image_t* extract_image(char* filename);
 
 int main(void) {
-
-    int result = extract_image();
-    return result;
+	
+    image_t* secret_image = extract_image("src\\g.bmp");
+	int result = encode(secret_image,2);
+    return 1;
 
 }
 
-int extract_image() {
-    int height = 156;
-    int width = height;
-    int i;
-    image_t* image = read_image("src\\g.bmp");
-    write_image(image);
-    //for (i = 0; i < height * width; i++) {
-     //   printf("%d", image->bytes[i]);
-    //}
-
-    return 0;
+image_t*  extract_image(char* filename) {
+    image_t* image = read_image(filename);
+//    write_image(image);
+    return image;
 }

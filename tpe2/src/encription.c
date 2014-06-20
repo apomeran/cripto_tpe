@@ -6,54 +6,54 @@ typedef unsigned char byte;
 void k_2_encode(image_t**, image_t*, int);
 void k_3_encode(image_t**, image_t*, int);
 
-int encode(image_t* img_to_encript, int k) {
+int encode(image_t* secret, int k) {
 
-    int image_count = 2;
-    image_t * imgs[2];
-    imgs[0] = read_image("src\\g.bmp");
-    imgs[1] = read_image("src\\o.bmp");
+    int shadow_count = 2;
+    image_t * shadows[2];
+    shadows[0] = read_image("src\\encode1.bmp");
+    shadows[1] = read_image("src\\encode2.bmp");
     if (k == 2) {
-        k_2_encode(imgs, img_to_encript, 2);
+        k_2_encode(shadows, secret, shadow_count);
     }
     if (k == 3) {
-        k_3_encode(imgs, img_to_encript, image_count);
+        k_3_encode(shadows, secret, shadow_count);
     }
 
     return 1;
 }
 
-void k_2_encode(image_t** imgs, image_t* img_to_encript, int image_count) {
-    int index, current_image;
+void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
+    int index, current_shadow;
     int decal = 4;
     int img_size;
     byte enc_first_byte;
     byte enc_second_byte;
-    byte decal_first_byte;
-    byte decal_second_byte;
+    byte decal_first_shadow_byte;
+    byte decal_second_shadow_byte;
     int result;
-    if (img_to_encript->size % 2 != 0) {
+    if (secret->size % 2 != 0) {
         printf("Not Supported");
         return;
     }
-    img_size = img_to_encript->size - img_to_encript->offset;
+    img_size = secret->size - secret->offset;
     for (index = 0; index < img_size; index += 2) {
-        enc_first_byte = img_to_encript->bytes[index];
-        enc_second_byte = img_to_encript->bytes[index + 1];
-        for (current_image = 0; current_image < image_count; current_image++) {
-            decal_first_byte = imgs[current_image]->bytes[index] >> decal;
-            decal_second_byte = imgs[current_image]->bytes[index + 1] >> decal;
-            result = (decal_first_byte * enc_first_byte + decal_second_byte * enc_second_byte) % 251;
-            imgs[current_image]->bytes[index] &= 0xF0;
-            imgs[current_image]->bytes[index] |= result & 0X0F;
-            imgs[current_image]->bytes[index + 1] &= 0xF0;
-            imgs[current_image]->bytes[index + 1] |= result & 0X0F;
+        enc_first_byte = secret->bytes[index];
+        enc_second_byte = secret->bytes[index + 1];
+        for (current_shadow = 0; current_shadow < shadow_count; current_shadow++) {
+            decal_first_shadow_byte = shadows[current_shadow]->bytes[index] >> decal;
+            decal_second_shadow_byte = shadows[current_shadow]->bytes[index + 1] >> decal;
+            result = (decal_first_shadow_byte * enc_first_byte + decal_second_shadow_byte * enc_second_byte) % 251;
+            shadows[current_shadow]->bytes[index] &= 0xF0;
+            shadows[current_shadow]->bytes[index] |= result & 0X0F;
+            shadows[current_shadow]->bytes[index + 1] &= 0xF0;
+            shadows[current_shadow]->bytes[index + 1] |= result & 0X0F;
         }
 
     }
     return;
 }
 
-void k_3_encode(image_t** imgs, image_t* img_to_encript, int image_count) {
+void k_3_encode(image_t** shadows, image_t* secret, int shadow_count) {
 
 
 }

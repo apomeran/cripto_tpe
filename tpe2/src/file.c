@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "file.h"
 #include "common.h"
+#include <string.h>
 
 image_t* read_image(const char* filename) {
     int byte_ammount = -1;
@@ -10,7 +11,9 @@ image_t* read_image(const char* filename) {
         return NULL;
     }
     image_t* img = malloc(sizeof(struct tagImage));
-   
+	
+	img->id = calloc(strlen(filename)+1, sizeof(char));
+	strcpy(img->id,filename);
 	//READ IMG SIZE
 	fread(&img->first_2_byte, sizeof(short),1,file);
 	fread(&img->size, sizeof(int),1,file);
