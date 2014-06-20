@@ -18,11 +18,12 @@ image_t* read_image(const char* filename) {
 	fseek(file, 4, SEEK_CUR);
 	fread(&img->offset, sizeof(int),1,file);
 	//Rewind
+	//rewind(file);
 	fseek(file, 0L, SEEK_SET); 
    
 	img->header = malloc((sizeof (unsigned char) * (img->offset+1)));
     fread(img->header, sizeof(unsigned char), img->offset, file);
-    img->bytes = malloc(sizeof (unsigned char) * (img->size - img->offset));
+    img->bytes = malloc(sizeof (unsigned char) * (img->size - img->offset + 1));
     fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
     fclose(file);
     return img;
@@ -31,7 +32,7 @@ image_t* read_image(const char* filename) {
 void write_image(image_t* img) {
 	FILE * file = fopen("src\\out.bmp", "w+");
     fwrite(&img->header, img->offset+1, 1, file);
-    fseek(file, img->offset, SEEK_SET);
+    fseek(file, img->offset+1, SEEK_SET);
     fwrite(img->bytes, img->size - img->offset, 1, file);
     fclose(file);
     return;
