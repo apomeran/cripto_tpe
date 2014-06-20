@@ -2,57 +2,42 @@
 #include "file.h"
 #include "common.h"
 
-BITMAPIMAGE* read_image(const char* filename) {
+image_t* read_image(const char* filename) {
     int byte_ammount = -1;
-    int extra_header_size = sizeof (BITMAPFILEHEADER) + sizeof (BITMAPINFOHEADER);
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
-        file_error(file);
+        printf("Error while reading BMP Image \n");
         return NULL;
     }
-    BITMAPIMAGE* img = malloc(sizeof (BITMAPIMAGE));
-    //  fseek(file,0L, SEEK_END);
-    //  img->len = ftell(file);
-    //  fseek(file,0L, SEEK_SET);
-    fread(&img->file_header, sizeof (BITMAPFILEHEADER), 1, file);
-    fread(&img->info_header, sizeof (BITMAPINFOHEADER), 1, file);
-    img->extra_header = malloc((sizeof (unsigned char) * img->file_header.bfOffBits) - extra_header_size);
-    fread(img->extra_header, img->file_header.bfOffBits - extra_header_size, 1, file);
-
-    fseek(file, img->file_header.bfOffBits, SEEK_SET);
-    byte_ammount = img->info_header.biHeight * img->info_header.biWidth;
-    if (byte_ammount < 0) {
-        file_error(file);
-        return NULL;
-    }
-    img->bytes = malloc(sizeof (unsigned char) * byte_ammount);
-    fread(img->bytes, byte_ammount, sizeof (unsigned char), file);
+    image_t* img = malloc(sizeof(struct tagImage));
+   
+	//READ IMG SIZE
+	fseek(file, 2, SEEK_CUR);
+	fread(&img->size, sizeof(int),1,file);
+	//READ OFFSET
+	fseek(file, 4, SEEK_CUR);
+	fread(&img->offset, sizeof(int),1,file);
+	//Rewind
+	fseek(file, 0L, SEEK_SET); 
+   
+	img->header = malloc((sizeof (unsigned char) * (img->offset+1)));
+    fread(img->header, sizeof(unsigned char), img->offset, file);
+    img->bytes = malloc(sizeof (unsigned char) * (img->size - img->offset));
+    fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
     fclose(file);
     return img;
 }
 
-void file_error(FILE* f) {
-    if (f != NULL)
-        close(f);
-    printf("Error while reading BMP Image \n");
-    return;
-}
-
-void write_image(BITMAPIMAGE* img) {
-    int extra_header_size = sizeof (BITMAPFILEHEADER) + sizeof (BITMAPINFOHEADER);
-    int byte_ammount = 0;
-    FILE * file = fopen("src\\out.bmp", "w+");
-    fwrite(&img->file_header, sizeof (BITMAPFILEHEADER), 1, file);
-    fwrite(&img->info_header, sizeof (BITMAPINFOHEADER), 1, file);
-    fwrite(img->extra_header, img->file_header.bfOffBits - extra_header_size, 1, file);
-    byte_ammount = img->info_header.biHeight * img->info_header.biWidth;
-    fseek(file, img->file_header.bfOffBits, SEEK_SET);
-    fwrite(img->bytes, byte_ammount, 1, file);
+void write_image(image_t* img) {
+	FILE * file = fopen("src\\out.bmp", "w+");
+    fwrite(&img->header, img->offset+1, 1, file);
+    fseek(file, img->offset, SEEK_SET);
+    fwrite(img->bytes, img->size - img->offset, 1, file);
     fclose(file);
     return;
 }
 
-void printImage(BITMAPIMAGE* img) {
+void printImage(image_t* img) {
     printf("Print BMP Matrix Image");
     return;
 }

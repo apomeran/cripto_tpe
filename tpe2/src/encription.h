@@ -3,6 +3,6 @@
 
 #include <stdlib.h>
 
-int encode(BITMAPIMAGE*, int);
+int encode(image_t*, int);
 
 #endif

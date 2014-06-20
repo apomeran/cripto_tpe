@@ -3,13 +3,13 @@
 #include "file.h"
 #include "encription.h"
 typedef unsigned char byte;
-void k_2_encode(BITMAPIMAGE**, BITMAPIMAGE*, int);
-void k_3_encode(BITMAPIMAGE**, BITMAPIMAGE*, int);
+void k_2_encode(image_t**, image_t*, int);
+void k_3_encode(image_t**, image_t*, int);
 
-int encode(BITMAPIMAGE* img_to_encript, int k) {
+int encode(image_t* img_to_encript, int k) {
 
     int image_count = 2;
-    BITMAPIMAGE * imgs[2];
+    image_t * imgs[2];
     imgs[0] = read_image("src\\g.bmp");
     imgs[1] = read_image("src\\o.bmp");
     if (k == 2) {
@@ -22,7 +22,7 @@ int encode(BITMAPIMAGE* img_to_encript, int k) {
     return 1;
 }
 
-void k_2_encode(BITMAPIMAGE** imgs, BITMAPIMAGE* img_to_encript, int image_count) {
+void k_2_encode(image_t** imgs, image_t* img_to_encript, int image_count) {
     int index, current_image;
     int decal = 4;
     int img_size;
@@ -31,11 +31,11 @@ void k_2_encode(BITMAPIMAGE** imgs, BITMAPIMAGE* img_to_encript, int image_count
     byte decal_first_byte;
     byte decal_second_byte;
     int result;
-    if (img_to_encript->info_header.biSize % 2 != 0) {
+    if (img_to_encript->size % 2 != 0) {
         printf("Not Supported");
         return;
     }
-    img_size = img_to_encript->info_header.biWidth * img_to_encript->info_header.biHeight;
+    img_size = img_to_encript->size - img_to_encript->offset;
     for (index = 0; index < img_size; index += 2) {
         enc_first_byte = img_to_encript->bytes[index];
         enc_second_byte = img_to_encript->bytes[index + 1];
@@ -53,7 +53,7 @@ void k_2_encode(BITMAPIMAGE** imgs, BITMAPIMAGE* img_to_encript, int image_count
     return;
 }
 
-void k_3_encode(BITMAPIMAGE** imgs, BITMAPIMAGE* img_to_encript, int image_count) {
+void k_3_encode(image_t** imgs, image_t* img_to_encript, int image_count) {
 
 
 }
