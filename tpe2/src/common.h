@@ -4,10 +4,13 @@
 #include <stdlib.h>
 typedef unsigned char byte;
 typedef struct tagImage{
+	short first_2_byte;
+	int second_4_byte;
 	byte* header;
 	byte* bytes;
 	int size;
 	int offset;
+	char* id;
 }image_t;
 
 //Modular Inverses
