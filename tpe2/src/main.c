@@ -8,7 +8,7 @@ image_t* extract_image(char* filename);
 
 int main(void) {
 	
-    image_t* secret_image = extract_image("src\\g.bmp");
+    image_t* secret_image = extract_image("src\\secret.bmp");
 	int result = encode(secret_image,2);
     return 1;
 
