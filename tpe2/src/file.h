@@ -1,6 +1,7 @@
 #ifndef __file__
 #define __file__
 
+#include <stdio.h>
 #include "common.h"
 
 image_t* read_image(const char*);

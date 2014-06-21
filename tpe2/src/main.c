@@ -1,12 +1,20 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <getopt.h>
 
 #include "common.h"
 #include "file.h"
+#include "decript.h"
+
+#define FALSE 0
+#define TRUE !FALSE
 
 image_t* extract_image(char* filename);
 
-int main(void) {
+int main(int argc, char *argv[]) {
 
   //-------Begin parsing arguments
   int isRecovery = FALSE;
@@ -55,14 +63,27 @@ int main(void) {
   }
   //-------End parsing arguments
 
-    image_t* secret_image = extract_image("src\\secret.bmp");
-    int result = encode(secret_image,2);
+    //image_t* secret_image = extract_image("src\\secret.bmp");
+    //int result = encode(secret_image,2);
+
+    if (isRecovery) {
+      //recovery
+      assure(k != -1, "You must specify k.\n");
+      assure(k == 2 || k == 3, "Wrong value for k.\n");
+      assure(dir[0] != 0, "Please specify a directory.\n");
+
+      image_t* image = decript(dir, k);
+      write_image(image);
+    } else {
+      //encription
+    }
+
     return 1;
 
 }
 
-image_t*  extract_image(char* filename) {
-    image_t* image = read_image(filename);
+//image_t*  extract_image(char* filename) {
+  //  image_t* image = read_image(filename);
 //    write_image(image);
-    return image;
-}
+    //return image;
+//}

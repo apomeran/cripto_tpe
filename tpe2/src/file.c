@@ -11,7 +11,7 @@ image_t* read_image(const char* filename) {
         return NULL;
     }
     image_t* img = malloc(sizeof(struct tagImage));
-	
+
 	img->id = calloc(strlen(filename)+1, sizeof(char));
 	strcpy(img->id,filename);
 	//READ IMG SIZE
@@ -22,14 +22,14 @@ image_t* read_image(const char* filename) {
 	fread(&img->offset, sizeof(int),1,file);
 	//Rewind
 	//rewind(file);
-	fseek(file, 0L, SEEK_SET); 
-   
+	fseek(file, 0L, SEEK_SET);
+
 	img->header = calloc(img->offset+1, sizeof (unsigned char));
-    fread(img->header, sizeof(unsigned char), img->offset, file);
-    img->bytes = calloc(img->size - img->offset + 1,sizeof (unsigned char));
-    fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
-    fclose(file);
-    return img;
+  fread(img->header, sizeof(unsigned char), img->offset, file);
+  img->bytes = calloc(img->size - img->offset + 1,sizeof (unsigned char));
+  fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
+  fclose(file);
+  return img;
 }
 
 void write_image(image_t* img) {
