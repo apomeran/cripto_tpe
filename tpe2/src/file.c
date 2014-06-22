@@ -25,11 +25,11 @@ image_t* read_image(const char* filename) {
 	fseek(file, 0L, SEEK_SET);
 
 	img->header = calloc(img->offset+1, sizeof (unsigned char));
-  fread(img->header, sizeof(unsigned char), img->offset, file);
-  img->bytes = calloc(img->size - img->offset + 1,sizeof (unsigned char));
-  fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
-  fclose(file);
-  return img;
+	fread(img->header, sizeof(unsigned char), img->offset, file);
+	img->bytes = calloc(img->size - img->offset + 1,sizeof (unsigned char));
+	fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
+	fclose(file);
+	return img;
 }
 
 void write_image(image_t* img) {
