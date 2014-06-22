@@ -14,7 +14,13 @@
 
 image_t* extract_image(char* filename);
 
-int main(int argc, char *argv[]) {
+int main(){
+	image_t* secret_image = extract_image("src\\secret.bmp");
+    int result = encode(secret_image,2);
+    return 1;
+}
+/*
+int main(int argc, char* argv[]) {
 
   //-------Begin parsing arguments
   int isRecovery = FALSE;
@@ -81,9 +87,9 @@ int main(int argc, char *argv[]) {
     return 1;
 
 }
-
-//image_t*  extract_image(char* filename) {
-  //  image_t* image = read_image(filename);
-//    write_image(image);
-    //return image;
-//}
+*/
+image_t*  extract_image(char* filename) {
+    image_t* image = read_image(filename);
+  //  write_image(image);
+    return image;
+}
