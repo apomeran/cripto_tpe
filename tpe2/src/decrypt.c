@@ -3,13 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "common.h"
-#include "decript.h"
+#include "decrypt.h"
 #include "file.h"
 
 #define IMG_MAX 3
 #define MODULUS 251
 
-image_t * decript(const char * directory, int k) {
+void decrypt_bytes_k2(image_t * secret_image, image_t ** images, int block_position, int image_count);
+void decrypt_bytes_k3(image_t * secret_image, image_t ** images, int block_position, int image_count);
+
+image_t * decrypt(const char * directory, int k) {
 	struct dirent *p_dirent;
   DIR* dir;
 	dir = opendir(directory);
@@ -17,7 +20,7 @@ image_t * decript(const char * directory, int k) {
 	image_t * images[IMG_MAX];
 	char * path;
 
-	assure(dir != NULL, "Problem opening directory, check your sintax.\n");
+	assure(dir != NULL, "Problem opening directory, check your syntax.\n");
   while ((p_dirent = readdir(dir)) != NULL) {
  	 	if(strstr(p_dirent->d_name, ".bmp") && image_qty < IMG_MAX) {
  	 		path = calloc(strlen(directory) + strlen(p_dirent->d_name) + 2, 1);
@@ -33,30 +36,27 @@ image_t * decript(const char * directory, int k) {
   assure(image_qty >= k, "You didn't provide the necessary amount of pics.\n");
 
   image_t * secret_image = (image_t *) malloc(sizeof(image_t));
+	secret_image->id = "src/decrypted/decrypted_img.bmp";
   secret_image->size = images[0]->size;
   secret_image->offset = images[0]->offset;
   secret_image->bytes = (unsigned char *) malloc(secret_image->size - secret_image->offset);
   secret_image->header = (unsigned char *) malloc(secret_image->offset);
   memcpy(secret_image->header, images[0]->header, images[0]->offset);
   int i;
+
+	void (*decrypt_bytes[2]) (image_t * secret, image_t ** images, int index, int image_qty);
+	decrypt_bytes[0] = &decrypt_bytes_k2;
+	decrypt_bytes[1] = &decrypt_bytes_k3;
+
   for (i = 0; i < secret_image->size - secret_image->offset; i += k) {
-      inner_decript(secret_image, images, k, i, image_qty);
+			if ((*decrypt_bytes[k - 2])) {
+				(*decrypt_bytes[k - 2]) (secret_image, images, i, image_qty);
+			}
   }
   return secret_image;
 }
 
-void inner_decript(image_t * secret_image, image_t ** images, int k, int index, int image_qty) {
-    switch(k) {
-        case 2:
-            decript_bytes_k2(secret_image, images, index, image_qty);
-            break;
-        case 3:
-            decript_bytes_k3(secret_image, images, index, image_qty);
-            break;
-    }
-}
-
-void decript_bytes_k2(image_t * secret_image, image_t ** images, int index, int image_qty) {
+void decrypt_bytes_k2(image_t * secret_image, image_t ** images, int index, int image_qty) {
     unsigned char polynomials[image_qty][3];
     int i, j;
     for (i = 0; i < image_qty; i++) {
@@ -84,7 +84,7 @@ void decript_bytes_k2(image_t * secret_image, image_t ** images, int index, int 
     secret_image->bytes[index + 1] = y;
 }
 
-void decript_bytes_k3(image_t * secret_image, image_t ** images, int index, int image_qty) {
+void decrypt_bytes_k3(image_t * secret_image, image_t ** images, int index, int image_qty) {
     unsigned char polynomials[image_qty][4];
     int i, j;
     for (i = 0; i < image_qty; i++) {
@@ -93,7 +93,6 @@ void decript_bytes_k3(image_t * secret_image, image_t ** images, int index, int 
         polynomials[i][2] = images[i]->bytes[index + 2] >> 3;
         polynomials[i][3] = ((images[i]->bytes[index] & 7) << 5) | ((images[i]->bytes[index + 1] & 7) << 2) | (images[i]->bytes[i + 2] & 3);
     }
-
     for (i = 0; i < image_qty; i++) {
         unsigned char _inverse = inverse(polynomials[i][0]);
         for (j = 0; j < 4; j++) {
@@ -108,7 +107,7 @@ void decript_bytes_k3(image_t * secret_image, image_t ** images, int index, int 
     }
 
     unsigned char aux;
-    if (polynomials[1][1] == 0) {
+    if (!polynomials[1][1]) {
         for (j = 0; j < 4; j++) {
             aux = polynomials[1][j];
             polynomials[1][j] = polynomials[2][j];

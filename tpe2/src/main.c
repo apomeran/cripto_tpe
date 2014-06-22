@@ -7,17 +7,18 @@
 
 #include "common.h"
 #include "file.h"
-#include "decript.h"
+#include "decrypt.h"
 
 #define FALSE 0
 #define TRUE !FALSE
 
 image_t* extract_image(char* filename);
 
-int main(){
-	image_t* secret_image = extract_image("src\\secret.bmp");
-    int result = encode(secret_image,2);
-    return 1;
+int main() {
+	image_t * img = decrypt("src/secret/k3", 3);
+	if (img)
+		write_image(img);
+	return 0;
 }
 /*
 int main(int argc, char* argv[]) {

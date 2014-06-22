@@ -8,4 +8,5 @@ image_t* read_image(const char*);
 void write_image(image_t*);
 void file_error(FILE*);
 void printImage(image_t* img);
+
 #endif
