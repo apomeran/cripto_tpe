@@ -13,7 +13,7 @@
 void decrypt_bytes_k2(image_t * secret_image, image_t ** images, int index, int image_qty);
 void decrypt_bytes_k3(image_t * secret_image, image_t ** images, int index, int image_qty);
 
-image_t * decrypt(const char * directory, int k) {
+image_t * decrypt(const char * directory, int k, char * img_name) {
 	struct dirent *p_dirent;
   DIR* dir;
 	dir = opendir(directory);
@@ -37,7 +37,7 @@ image_t * decrypt(const char * directory, int k) {
   assure(image_qty >= k, "You didn't provide the necessary amount of pics.\n");
 
   image_t * secret_image = (image_t *) malloc(sizeof(image_t));
-	secret_image->id = "src/decrypted/dec_img.bmp";
+  secret_image->id = img_name;
   secret_image->size = images[0]->size;
   secret_image->offset = images[0]->offset;
   secret_image->bytes = (unsigned char *) malloc(secret_image->size - secret_image->offset);

@@ -4,7 +4,7 @@
 #include "file.h"
 #include "encription.h"
 #include "time.h"
-#include <openssl/md5.h>
+//#include <openssl/md5.h>
 typedef unsigned char byte;
 void k_2_encode(image_t**, image_t*, int);
 void k_3_encode(image_t**, image_t*, int);
@@ -149,8 +149,8 @@ int calculateAuth(int a1, int a2) {
     char* a2_binary = byte_to_binary(a2);
     strcat(hashValue, a2_binary);
     unsigned char* md = malloc(16);
-    unsigned char* hash = MD5(hashValue,strlen(hashValue),md);
-    // unsigned char hash[] = "9214c48d83c004bf0afc2f0b8a02685d";
+    //unsigned char* hash = MD5(hashValue,strlen(hashValue),md);
+    unsigned char * hash = "9214c48d83c004bf0afc2f0b8a02685d";
     return xorFromHashWrapper(hash, strlen(hash));
 }
 
@@ -165,8 +165,8 @@ int calculateAuthK3(int a1, int a2, int a3) {
     char* a3_binary = byte_to_binary(a3);
     strcat(hashValue, a3_binary);
     unsigned char* md = malloc(16);
-    unsigned char* hash = MD5(hashValue,strlen(hashValue),md);
-    // unsigned char hash[] = "9214c48d83c004bf0afc2f0b8a02685d";
+    //unsigned char* hash = MD5(hashValue,strlen(hashValue),md);
+    unsigned char * hash = "9214c48d83c004bf0afc2f0b8a02685d";
     return xorFromHashWrapper(hash, strlen(hash));
 }
 

@@ -87,11 +87,9 @@ int main(int argc, char* argv[]) {
 
   if (isRecovery) {
     //recovery
-
-    image_t* image = decrypt(dir, k);
-    write_image(image);
+    write_image(decrypt(dir, k, image));
   } else {
-    encode(read_image("src/d1.bmp"), 2);
+    encode(read_image(image), k, dir);
   }
 
   return 0;
