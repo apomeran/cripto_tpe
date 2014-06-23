@@ -59,18 +59,18 @@ int encode(image_t* secret, int k, int n) {
     image_t * shadows[4];
 
     if (k == 2) {
-        shadows[0] = read_image("src\\encode1.bmp");
-        shadows[1] = read_image("src\\encode2.bmp");
-        shadows[2] = read_image("src\\encode3.bmp");
-        shadows[3] = read_image("src\\encode4.bmp");
+        shadows[0] = read_image("src/d1.bmp");
+        shadows[1] = read_image("src/d2.bmp");
+        /*shadows[2] = read_image("src\\encode3.bmp");
+        shadows[3] = read_image("src\\encode4.bmp");*/
 
         if ((secret->size - secret->offset) % 2 != 0) {
             printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
             return -1;
         }
         k_2_encode(shadows, secret, shadow_count);
-        shadows[0]->id = "src\\encode1shadow.bmp";
-        shadows[1]->id = "src\\encode2shadow.bmp";
+        shadows[0]->id = "src/encode1shadow.bmp";
+        shadows[1]->id = "src/encode2shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
     }
@@ -121,10 +121,10 @@ void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
             decal_first_shadow_byte = shadow_first_byte >> decal;
             shadow_second_byte = shadows[current_shadow]->bytes[index + 1];
             decal_second_shadow_byte = shadow_second_byte >> decal;
-            while (checkLinealDependencyK2(index, current_shadow, decal_first_shadow_byte, decal_second_shadow_byte, shadows, shadow_count) == 1) {
-                count++;
-                decal_first_shadow_byte = (decal_first_shadow_byte + 1) % 15;
-            }
+            // while (checkLinealDependencyK2(index, current_shadow, decal_first_shadow_byte, decal_second_shadow_byte, shadows, shadow_count) == 1) {
+            //     count++;
+            //     decal_first_shadow_byte = (decal_first_shadow_byte + 1) % 15;
+            // }
             result = (decal_first_shadow_byte * secret_first_byte + decal_second_shadow_byte * secret_second_byte) % 251;
             shadows[current_shadow]->bytes[index] &= 0b11110000;
             shadows[current_shadow]->bytes[index] |= result >> 4;
@@ -257,7 +257,7 @@ int checkLinealDependencyK3(int index, int current_shadow, byte first_byte, byte
             if (currentIterationA == firstIterationA && currentIterationB == firstIterationB) {
                 printf("ee \n");
 				return 1;
-				
+
             }
         }
     }
