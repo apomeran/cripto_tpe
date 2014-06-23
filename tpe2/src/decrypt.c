@@ -203,9 +203,9 @@ void recover_block3(image_t * secret_image, image_t ** images, int block_positio
     }
 
     // Use the first three equations to solve the system.
-		int z = ((int)coefficients[2][3] * inverse((int)coefficients[2][2])) % 251;
-    int y = ((int)coefficients[1][3] - ((int)coefficients[1][2] * z)) % 251;
-    int x = ((int)coefficients[0][3] - ((int)coefficients[0][2] * z) - ((int)coefficients[0][1] * y)) % 251;
+		unsigned char z = (coefficients[2][3] * inverse(coefficients[2][2])) % 251;
+    int y = (coefficients[1][3] - (coefficients[1][2] * z)) % 251;
+    int x = (coefficients[0][3] - (coefficients[0][2] * z) - (coefficients[0][1] * y)) % 251;
 		if (z < 0)
 			z += 251;
 		if (y < 0)
@@ -213,14 +213,7 @@ void recover_block3(image_t * secret_image, image_t ** images, int block_positio
 		if (x < 0)
 			x += 251;
 
-		if (x < 0 || x > 250)
-			printf("x");
-		if (y < 0 || y > 250)
-			printf("y");
-		if (z < 0 || z > 250)
-			printf("z");
-
-    secret_image->bytes[block_position] = (unsigned char) x;
+    secret_image->bytes[block_position] = (unsigned char) 0;
     secret_image->bytes[block_position + 1] = (unsigned char) y;
     secret_image->bytes[block_position + 2] = (unsigned char) z;
 }
