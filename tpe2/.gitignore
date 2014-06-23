@@ -2,3 +2,4 @@
 *.out
 *.exe
 *.bmp
+.DS_Store
