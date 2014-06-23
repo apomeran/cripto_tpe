@@ -58,28 +58,18 @@ int encode(image_t* secret, int k, int n) {
     image_t * shadows[4];
 
     if (k == 2) {
-<<<<<<< HEAD
         shadows[0] = read_image("src/d1.bmp");
         shadows[1] = read_image("src/d2.bmp");
         /*shadows[2] = read_image("src\\encode3.bmp");
         shadows[3] = read_image("src\\encode4.bmp");*/
-=======
-        shadows[0] = read_image("src\\encode1.bmp");
-        shadows[1] = read_image("src\\encode2.bmp");
->>>>>>> 4d2a5b912ddb809ee2584298532f91ee222586c5
 
         if ((secret->size - secret->offset) % 2 != 0) {
             printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
             return -1;
         }
         k_2_encode(shadows, secret, shadow_count);
-<<<<<<< HEAD
         shadows[0]->id = "src/encode1shadow.bmp";
         shadows[1]->id = "src/encode2shadow.bmp";
-=======
-        shadows[0]->id = "src\\secret\\k2\\encode1shadow.bmp";
-        shadows[1]->id = "src\\secret\\k2\\encode2shadow.bmp";
->>>>>>> 4d2a5b912ddb809ee2584298532f91ee222586c5
         write_image(shadows[0]);
         write_image(shadows[1]);
     }

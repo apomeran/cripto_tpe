@@ -14,10 +14,11 @@
 
 image_t* extract_image(char* filename);
 
-int main(){
+/*int main(){
 	// image_t* secret_image = extract_image("src\\secret.bmp");
 	// encode(read_image("src/d1.bmp"), 2);
-	image_t* secret_image = decrypt("src/secret/k2", 2);
+	// image_t* secret_image = decrypt("src/secret/k3", 3);
+	image_t* secret_image = decrypt("resources/grupo2k2", 2);
 	write_image(secret_image);
 	// image_t* encrypted = extract_image("src\\secret.bmp");
 	// encode(encrypted,2,2);
@@ -26,8 +27,8 @@ int main(){
 	// decrypted->id = "src\\cdtmalbois.bmp";
 	// write_image(decrypted);
   return 0;
-}
-/*
+}*/
+
 int main(int argc, char* argv[]) {
 
   //-------Begin parsing arguments
@@ -71,7 +72,7 @@ int main(int argc, char* argv[]) {
         n = atoi(optarg);
         break;
       default:
-        printf("dafuq i'm doing here\n");
+        printf("dafuq am I doing here\n");
         break;
     }
   }
@@ -80,22 +81,22 @@ int main(int argc, char* argv[]) {
     //image_t* secret_image = extract_image("src\\secret.bmp");
     //int result = encode(secret_image,2);
 
-    if (isRecovery) {
-      //recovery
-      assure(k != -1, "You must specify k.\n");
-      assure(k == 2 || k == 3, "Wrong value for k.\n");
-      assure(dir[0] != 0, "Please specify a directory.\n");
+	assure(k != -1, "You must specify k.\n");
+	assure(k == 2 || k == 3, "Wrong value for k.\n");
+	assure(dir[0] != 0, "Please specify a directory.\n");
 
-      image_t* image = decript(dir, k);
-      write_image(image);
-    } else {
-      //encription
-    }
+  if (isRecovery) {
+    //recovery
 
-    return 1;
+    image_t* image = decrypt(dir, k);
+    write_image(image);
+  } else {
+    encode(read_image("src/d1.bmp"), 2);
+  }
 
+  return 0;
 }
-*/
+
 image_t*  extract_image(char* filename) {
     image_t* image = read_image(filename);
   //  write_image(image);
