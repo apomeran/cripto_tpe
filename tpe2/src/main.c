@@ -14,7 +14,6 @@
 
 image_t* extract_image(char* filename);
 
-<<<<<<< HEAD
 int main(){
 	// image_t* secret_image = extract_image("src\\secret.bmp");
 	image_t* secret_image = extract_image("src\\k3-1.bmp");
