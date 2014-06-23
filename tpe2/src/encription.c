@@ -11,6 +11,12 @@ void k_4_encode(image_t**, image_t*, int);
 int checkLinealDependencyK2(int, int, byte, byte, image_t**, int);
 int checkLinealDependencyK3(int, int, byte, byte, byte, image_t**, int);
 char * byte_to_binary(int);
+int modular_inverse(int i);
+
+int modInverse(int i) {
+    i %= 251;
+    return inverses[i];
+}
 
 char * byte_to_binary(int x) {
     int z = 128;
@@ -48,21 +54,20 @@ int xorFromHash(char * hash) {
 }
 
 int encode(image_t* secret, int k, int n) {
-
     int shadow_count = n;
     shadow_count = 2;
     image_t * shadows[4];
-    shadows[0] = read_image("src\\encode1.bmp");
-    shadows[1] = read_image("src\\encode2.bmp");
-    shadows[2] = read_image("src\\encode3.bmp");
-    shadows[3] = read_image("src\\encode4.bmp");
-	
-	
+
     if (k == 2) {
-		if (secret->size % 2 != 0) {
-			printf("Not Supported !! '\n'");
-			return -1;
-		}
+        shadows[0] = read_image("src\\encode1.bmp");
+        shadows[1] = read_image("src\\encode2.bmp");
+        shadows[2] = read_image("src\\encode3.bmp");
+        shadows[3] = read_image("src\\encode4.bmp");
+
+        if ((secret->size - secret->offset) % 2 != 0) {
+            printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
+            return -1;
+        }
         k_2_encode(shadows, secret, shadow_count);
         shadows[0]->id = "src\\encode1shadow.bmp";
         shadows[1]->id = "src\\encode2shadow.bmp";
@@ -70,15 +75,25 @@ int encode(image_t* secret, int k, int n) {
         write_image(shadows[1]);
     }
     if (k == 3) {
-        if (secret->size % 3 != 0) {
-			printf("Not Supported !! '\n'");
-			return -1;
-		}
-		k_3_encode(shadows, secret, shadow_count);
+        shadows[0] = read_image("src\\k3-1.bmp");
+        shadows[1] = read_image("src\\k3-2.bmp");
+        shadows[2] = read_image("src\\k3-3.bmp");
+        if ((secret->size - secret->offset) % 3 != 0) {
+            printf("Not Supported. The image needs to be Modulus 3 == 0 '\n'");
+            return -1;
+        }
+        k_3_encode(shadows, secret, shadow_count);
+        shadows[0]->id = "src\\k3-1-shadow.bmp";
+        shadows[1]->id = "src\\k3-2-shadow.bmp";
+        shadows[2]->id = "src\\k3-3-shadow.bmp";
+        write_image(shadows[0]);
+        write_image(shadows[1]);
+        write_image(shadows[2]);
+
     }
     if (k == 4) {
         printf("Not supported");
-		return 1;
+        return 1;
     }
     return -1;
 }
@@ -96,7 +111,7 @@ void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
     byte decal_first_shadow_byte;
     byte decal_second_shadow_byte;
     int result;
-    
+
     img_size = secret->size - secret->offset;
     for (index = 0; index < img_size; index += 2) {
         secret_first_byte = secret->bytes[index];
@@ -148,20 +163,19 @@ int calculateAuthK3(int a1, int a2, int a3) {
     a2 = a2 << 1;
     char* a2_binary = byte_to_binary(a2);
     strcat(hashValue, a2_binary);
-	a3 = a3 << 1;
-	char* a3_binary = byte_to_binary(a3);
+    a3 = a3 << 1;
+    char* a3_binary = byte_to_binary(a3);
     strcat(hashValue, a3_binary);
-	// unsigned char* md = malloc(MD5_DIGGEST_LENGTH);
+    // unsigned char* md = malloc(MD5_DIGGEST_LENGTH);
     // unsigned char* hash = MD5(hashValue,strlen(hashValue),md);
     unsigned char hash[] = "9214c48d83c004bf0afc2f0b8a02685d";
     return xorFromHashWrapper(hash, strlen(hash));
 }
 
-
 void k_3_encode(image_t** shadows, image_t* secret, int shadow_count) {
     int index, current_shadow, j, authentication_bit = 0;
     //int **coefficient_matrix = calloc(sizeof(int*),shadow_count);
-    int decal = 5;
+    int decal = 3;
     int img_size;
     int count = 0;
     byte secret_first_byte;
@@ -174,7 +188,7 @@ void k_3_encode(image_t** shadows, image_t* secret, int shadow_count) {
     byte decal_second_shadow_byte;
     byte decal_third_shadow_byte;
     int result;
-    
+
     img_size = secret->size - secret->offset;
     for (index = 0; index < img_size; index += 3) {
         secret_first_byte = secret->bytes[index];
@@ -194,16 +208,16 @@ void k_3_encode(image_t** shadows, image_t* secret, int shadow_count) {
             result = (decal_first_shadow_byte * secret_first_byte + decal_second_shadow_byte * secret_second_byte + decal_third_shadow_byte * secret_third_byte) % 251;
             shadows[current_shadow]->bytes[index] &= 0b11111000;
             shadows[current_shadow]->bytes[index] |= result >> 5;
-            shadows[current_shadow]->bytes[index + 1] &= 0b11111000; //ONLY 3 . 1 FOR AUTHENTICATION BIT !!
+            shadows[current_shadow]->bytes[index + 1] &= 0b11111000;
             shadows[current_shadow]->bytes[index + 1] |= (result & 0b00011100) >> 2;
             shadows[current_shadow]->bytes[index + 2] &= 0b11111000;
             shadows[current_shadow]->bytes[index + 2] |= (result & 0b00000011);
-            authentication_bit = calculateAuthK3(shadows[current_shadow]->bytes[index], shadows[current_shadow]->bytes[index + 1], shadows[current_shadow]->bytes[index + 2]);
-            // authentication_bit = 1;
+            // authentication_bit = calculateAuthK3(shadows[current_shadow]->bytes[index], shadows[current_shadow]->bytes[index + 1], shadows[current_shadow]->bytes[index + 2]);
+            authentication_bit = 1;
             if (authentication_bit == 1) {
-                // shadows[current_shadow]->bytes[index + 1] |= 0b00001000;
+                shadows[current_shadow]->bytes[index + 2] |= 0b00000100;
             } else {
-                // shadows[current_shadow]->bytes[index + 1] &= 0b11110111;
+                shadows[current_shadow]->bytes[index + 1] &= 0b11111011;
             }
         }
     }
@@ -227,10 +241,46 @@ int isDependent(int a, int b) {
 }
 
 int checkLinealDependencyK3(int index, int current_shadow, byte first_byte, byte second_byte, byte third_byte, image_t** shadows, int n) {
-	return 0;
+    int i;
+	int auxInverse = modInverse(first_byte);
+    unsigned char firstIterationA = (auxInverse * second_byte) % 251;
+    unsigned char firstIterationB = (auxInverse * third_byte) % 251;
+
+    for (i = 0; i < n; i++) {
+        if (i != current_shadow) {
+		    byte b1 = shadows[i]->bytes[index] >> 3;
+			byte b2 = shadows[i]->bytes[index+1] >> 3;
+		    byte b3 = shadows[i]->bytes[index+2] >> 3;
+            int auxInverseB = modInverse(b1);
+			unsigned char currentIterationA = (auxInverseB * b2) % 251;
+            unsigned char currentIterationB = (auxInverseB * b3) % 251;
+            if (currentIterationA == firstIterationA && currentIterationB == firstIterationB) {
+                printf("ee \n");
+				return 1;
+				
+            }
+        }
+    }
+    return 0;
 }
 
 int checkLinealDependencyK2(int index, int current_shadow, byte first_byte, byte second_byte, image_t** shadows, int n) {
+    int i;
+    unsigned char firstIteration = (modInverse(first_byte) * second_byte) % 251;
+    for (i = 0; i < n; i++) {
+        if (i != current_shadow) {
+		    byte b1 = shadows[i]->bytes[index] >> 4;
+		    byte b2 = shadows[i]->bytes[index+1] >> 4;
+            unsigned char currentIteration = (modInverse(b1) * b2) % 251;
+            if (currentIteration == firstIteration) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int checkLinealDependencyK2Direct(int index, int current_shadow, byte first_byte, byte second_byte, image_t** shadows, int n) {
     int i;
     double first_multiplier, second_multiplier;
     double epsilon = 0.0001;

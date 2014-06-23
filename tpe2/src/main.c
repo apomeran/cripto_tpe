@@ -15,8 +15,9 @@
 image_t* extract_image(char* filename);
 
 int main(){
-	image_t* secret_image = extract_image("src\\secret.bmp");
-    int result = encode(secret_image,2);
+	// image_t* secret_image = extract_image("src\\secret.bmp");
+	image_t* secret_image = extract_image("src\\k3-1.bmp");
+	int result = encode(secret_image,3);
     return 1;
 }
 /*
