@@ -34,9 +34,9 @@ int main(int argc, char* argv[]) {
   //-------Begin parsing arguments
   int isRecovery = FALSE;
   int k = -1;
-  int n = -1;
-  char image[40] = {0};
-  char dir[40] = {0};
+  int n = 0;
+  char * image = calloc(sizeof(char), 40);
+  char * dir = calloc(sizeof(char), 40);
 
   int opt = 0;
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     //recovery
     write_image(decrypt(dir, k, image));
   } else {
-    encode(read_image(image), k, dir);
+    encode(read_image(image), k, n, dir);
   }
 
   return 0;
