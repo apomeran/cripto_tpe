@@ -15,7 +15,7 @@
 image_t* extract_image(char* filename);
 
 int main() {
-	image_t * img = decrypt("src/secret/k3", 3);
+	image_t * img = decrypt("src/secret/k2", 2);
 	if (img)
 		write_image(img);
 	return 0;

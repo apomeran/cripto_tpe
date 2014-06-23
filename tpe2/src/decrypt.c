@@ -85,63 +85,6 @@ void decrypt_bytes_k2(image_t * secret_image, image_t ** images, int index, int 
     secret_image->bytes[index + 1] = y;
 }
 
-void decrypt_bytes_k3(image_t * secret_image, image_t ** images, int index, int image_qty) {
-    unsigned char polynomials[image_qty][4];
-    int i, j;
-    for (i = 0; i < image_qty; i++) {
-        polynomials[i][0] = images[i]->bytes[index] >> 3;
-        polynomials[i][1] = images[i]->bytes[index + 1] >> 3;
-        polynomials[i][2] = images[i]->bytes[index + 2] >> 3;
-        polynomials[i][3] = ((images[i]->bytes[index] & 7) << 5) | ((images[i]->bytes[index + 1] & 7) << 2) | (images[i]->bytes[i + 2] & 3);
-    }
-    for (i = 0; i < image_qty; i++) {
-        unsigned char _inverse = inverse(polynomials[i][0]);
-        for (j = 0; j < 4; j++) {
-            polynomials[i][j] = ((int)polynomials[i][j] * _inverse) % MODULUS;
-        }
-    }
-    for (i = 1; i < image_qty; i++) {
-        for (j = 0; j < 4; j++) {
-            int result = ((int)polynomials[i][j] - polynomials[0][j]);
-            polynomials[i][j] = (result < 0) ? result + MODULUS : result;
-        }
-    }
-
-    unsigned char aux;
-    if (!polynomials[1][1]) {
-        for (j = 0; j < 4; j++) {
-            aux = polynomials[1][j];
-            polynomials[1][j] = polynomials[2][j];
-            polynomials[2][j] = aux;
-        }
-    } else {
-        if (polynomials[2][1] != 0) {
-            for (i = 1; i < image_qty; i++) {
-                unsigned char _inverse = inverse(polynomials[i][1]);
-                for (j = 1; j < 4; j++) {
-                    polynomials[i][j] = ((int)polynomials[i][j] * _inverse) % MODULUS;
-                }
-            }
-
-            for (i = 2; i < image_qty; i++) {
-                for (j = 0; j < 4; j++) {
-                    int result = ((int)polynomials[i][j] - polynomials[1][j]);
-                    polynomials[i][j] = (result < 0) ? result + MODULUS : result;
-                }
-            }
-        }
-    }
-
-    unsigned char z = (polynomials[2][3] * inverse(polynomials[2][2])) % MODULUS;
-    unsigned char y = (polynomials[1][3] - (polynomials[1][2] * z)) % MODULUS;
-    unsigned char x = (polynomials[0][3] - (polynomials[0][2] * z) - (polynomials[0][1] * y)) % MODULUS;
-
-    secret_image->bytes[index] = x;
-    secret_image->bytes[index + 1] = y;
-    secret_image->bytes[index + 2] = z;
-}
-
-
 void recover_block3(image_t * secret_image, image_t ** images, int block_position, int image_count) {
     int coefficients[image_count][4];
     int i, j;
