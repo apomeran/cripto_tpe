@@ -15,9 +15,12 @@
 image_t* extract_image(char* filename);
 
 int main(){
-	// image_t* secret_image = extract_image("src\\secret.bmp");
-	image_t* secret_image = decrypt("src/secret/k2", 2);
-	write_image(secret_image);
+	image_t* encrypted = extract_image("src\\secret.bmp");
+	encode(encrypted,2,2);
+	// image_t* decrypted = decrypt("src\\secret\\k2", 2);
+	image_t* decrypted = decrypt("resources\\grupo2k2", 2);
+	decrypted->id = "src\\cdtmalbois.bmp";
+	write_image(decrypted);
   return 0;
 }
 /*

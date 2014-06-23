@@ -55,22 +55,19 @@ int xorFromHash(char * hash) {
 
 int encode(image_t* secret, int k, int n) {
     int shadow_count = n;
-    shadow_count = 2;
     image_t * shadows[4];
 
     if (k == 2) {
         shadows[0] = read_image("src\\encode1.bmp");
         shadows[1] = read_image("src\\encode2.bmp");
-        shadows[2] = read_image("src\\encode3.bmp");
-        shadows[3] = read_image("src\\encode4.bmp");
 
         if ((secret->size - secret->offset) % 2 != 0) {
             printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
             return -1;
         }
         k_2_encode(shadows, secret, shadow_count);
-        shadows[0]->id = "src\\encode1shadow.bmp";
-        shadows[1]->id = "src\\encode2shadow.bmp";
+        shadows[0]->id = "src\\secret\\k2\\encode1shadow.bmp";
+        shadows[1]->id = "src\\secret\\k2\\encode2shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
     }
@@ -96,7 +93,7 @@ int encode(image_t* secret, int k, int n) {
         return 1;
     }
     return -1;
-}
+}	
 
 void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
     int index, current_shadow, j, authentication_bit = 0;
@@ -120,7 +117,7 @@ void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
             shadow_first_byte = shadows[current_shadow]->bytes[index];
             decal_first_shadow_byte = shadow_first_byte >> decal;
             shadow_second_byte = shadows[current_shadow]->bytes[index + 1];
-            decal_second_shadow_byte = shadow_second_byte >> decal;
+            decal_second_shadow_byte = shadow_second_byte >> decal + 1;
             while (checkLinealDependencyK2(index, current_shadow, decal_first_shadow_byte, decal_second_shadow_byte, shadows, shadow_count) == 1) {
                 count++;
                 decal_first_shadow_byte = (decal_first_shadow_byte + 1) % 15;
@@ -131,11 +128,11 @@ void k_2_encode(image_t** shadows, image_t* secret, int shadow_count) {
             shadows[current_shadow]->bytes[index + 1] &= 0b11100000; //ONLY 3 . 1 FOR AUTHENTICATION BIT !!
             shadows[current_shadow]->bytes[index + 1] |= result & 0b00001111;
             authentication_bit = calculateAuth(shadows[current_shadow]->bytes[index], shadows[current_shadow]->bytes[index + 1]);
-            // authentication_bit = 1;
+			// authentication_bit = 1;
             if (authentication_bit == 1) {
-                shadows[current_shadow]->bytes[index + 1] |= 0b00001000;
+                 shadows[current_shadow]->bytes[index + 1] |= 0b00001000;
             } else {
-                shadows[current_shadow]->bytes[index + 1] &= 0b11110111;
+                 shadows[current_shadow]->bytes[index + 1] &= 0b11110111;
             }
         }
     }
