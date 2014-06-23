@@ -10,6 +10,8 @@ void assure(int truth, char* message) {
 }
 
 int inverse(int i) {
+
+  i %= 251;	
   if (i < 1 || i > 251) {
     return -1;
   }

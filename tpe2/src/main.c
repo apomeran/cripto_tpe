@@ -16,8 +16,8 @@ image_t* extract_image(char* filename);
 
 int main(){
 	// image_t* secret_image = extract_image("src\\secret.bmp");
-	// encode(read_image("src/d1.bmp"), 2);
-	image_t* secret_image = decrypt("src/secret/k2", 2);
+	encode(read_image("src/dk3.bmp"), 3,3);
+	image_t* secret_image = decrypt("resources/k3", 3);
 	write_image(secret_image);
 	// image_t* encrypted = extract_image("src\\secret.bmp");
 	// encode(encrypted,2,2);
