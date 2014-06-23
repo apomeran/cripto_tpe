@@ -213,7 +213,7 @@ void recover_block3(image_t * secret_image, image_t ** images, int block_positio
 		if (x < 0)
 			x += 251;
 
-    secret_image->bytes[block_position] = (unsigned char) 0;
+    secret_image->bytes[block_position] = (unsigned char) x;
     secret_image->bytes[block_position + 1] = (unsigned char) y;
     secret_image->bytes[block_position + 2] = (unsigned char) z;
 }

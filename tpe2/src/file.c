@@ -33,7 +33,7 @@ image_t* read_image(const char* filename) {
 }
 
 void write_image(image_t* img) {
-	FILE * file = fopen(strcat(img->id,"_holis.bmp"), "w+");
+	FILE * file = fopen(img->id, "w+");
   if (file) {
     fwrite(img->header, img->offset, 1, file);
     fwrite(img->bytes, img->size - img->offset, 1, file);
