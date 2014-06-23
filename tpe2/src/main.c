@@ -7,13 +7,14 @@
 
 #include "common.h"
 #include "file.h"
-#include "decript.h"
+#include "decrypt.h"
 
 #define FALSE 0
 #define TRUE !FALSE
 
 image_t* extract_image(char* filename);
 
+<<<<<<< HEAD
 int main(){
 	// image_t* secret_image = extract_image("src\\secret.bmp");
 	image_t* secret_image = extract_image("src\\k3-1.bmp");
