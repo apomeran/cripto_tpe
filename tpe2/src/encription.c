@@ -53,33 +53,30 @@ int xorFromHash(char * hash) {
     return result;
 }
 
-int encode(image_t* secret, int k, int n) {
+int encode(image_t* secret, int k, int n, char * dir) {
     int shadow_count = n;
     image_t * shadows[4];
 
     if (k == 2) {
-        shadows[0] = read_image("resources/readHere/d1.bmp");
-        shadows[1] = read_image("resources/readHere/d2.bmp");
+        image_t ** shadows = read_images_from_dir(dir, n != 0 ? n : 2);
 
         if ((secret->size - secret->offset) % 2 != 0) {
             printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
             return -1;
         }
-        k_2_encode(shadows, secret, shadow_count);
+        k_2_encode(shadows, secret, n != 0 ? n : 2);
         shadows[0]->id = "resources/k2/encode1shadow.bmp";
         shadows[1]->id = "resources/k2/encode2shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
     }
     if (k==3){
-        shadows[0] = read_image("resources/readHere/a1.bmp");
-        shadows[1] = read_image("resources/readHere/a2.bmp");
-        shadows[2] = read_image("resources/readHere/a3.bmp");
+        image_t ** shadows = read_images_from_dir(dir, n != 0 ? n : 3);
         if ((secret->size - secret->offset) % 3 != 0) {
             printf("Not Supported. The image needs to be Modulus 3 == 0 '\n'");
             return -1;
         }
-        k_3_encode(shadows, secret, shadow_count);
+        k_3_encode(shadows, secret, n != 0 ? n : 3);
         shadows[0]->id = "resources/k3/encode1shadow.bmp";
         shadows[1]->id = "resources/k3/encode2shadow.bmp";
         shadows[2]->id = "resources/k3/encode3shadow.bmp";

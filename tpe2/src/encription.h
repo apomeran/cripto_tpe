@@ -3,6 +3,6 @@
 
 #include <stdlib.h>
 
-int encode(image_t*, int,int);
+int encode(image_t*, int, int, char *);
 
 #endif
