@@ -59,33 +59,33 @@ int encode(image_t* secret, int k, int n) {
     image_t * shadows[4];
 
     if (k == 2) {
-        shadows[0] = read_image("src\\encode1.bmp");
-        shadows[1] = read_image("src\\encode2.bmp");
-        shadows[2] = read_image("src\\encode3.bmp");
-        shadows[3] = read_image("src\\encode4.bmp");
+        shadows[0] = read_image("src/encode1.bmp");
+        shadows[1] = read_image("src/encode2.bmp");
+        shadows[2] = read_image("src/encode3.bmp");
+        shadows[3] = read_image("src/encode4.bmp");
 
         if ((secret->size - secret->offset) % 2 != 0) {
             printf("Not Supported. The image needs to be Modulus 2 == 0 '\n'");
             return -1;
         }
         k_2_encode(shadows, secret, shadow_count);
-        shadows[0]->id = "src\\encode1shadow.bmp";
-        shadows[1]->id = "src\\encode2shadow.bmp";
+        shadows[0]->id = "src/encode1shadow.bmp";
+        shadows[1]->id = "src/encode2shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
     }
     if (k == 3) {
-        shadows[0] = read_image("src\\k3-1.bmp");
-        shadows[1] = read_image("src\\k3-2.bmp");
-        shadows[2] = read_image("src\\k3-3.bmp");
+        shadows[0] = read_image("src/k3-1.bmp");
+        shadows[1] = read_image("src/k3-2.bmp");
+        shadows[2] = read_image("src/k3-3.bmp");
         if ((secret->size - secret->offset) % 3 != 0) {
             printf("Not Supported. The image needs to be Modulus 3 == 0 '\n'");
             return -1;
         }
         k_3_encode(shadows, secret, shadow_count);
-        shadows[0]->id = "src\\k3-1-shadow.bmp";
-        shadows[1]->id = "src\\k3-2-shadow.bmp";
-        shadows[2]->id = "src\\k3-3-shadow.bmp";
+        shadows[0]->id = "src/k3-1-shadow.bmp";
+        shadows[1]->id = "src/k3-2-shadow.bmp";
+        shadows[2]->id = "src/k3-3-shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
         write_image(shadows[2]);
@@ -257,7 +257,7 @@ int checkLinealDependencyK3(int index, int current_shadow, byte first_byte, byte
             if (currentIterationA == firstIterationA && currentIterationB == firstIterationB) {
                 printf("ee \n");
 				return 1;
-				
+
             }
         }
     }
