@@ -64,8 +64,8 @@ int encode(image_t* secret, int k, int n, char * dir) {
             return -1;
         }
         k_2_encode(shadows, secret, n != 0 ? n : 2);
-        shadows[0]->id = "src/secret/k2/encode1shadow.bmp";
-        shadows[1]->id = "src/secret/k2/encode2shadow.bmp";
+        shadows[0]->id = "resources/k2/encode1shadow.bmp";
+        shadows[1]->id = "resources/k2/encode2shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
     }
@@ -76,9 +76,9 @@ int encode(image_t* secret, int k, int n, char * dir) {
             return -1;
         }
         k_3_encode(shadows, secret, n != 0 ? n : 3);
-        shadows[0]->id = "src/secret/k3/encode1shadow.bmp";
-        shadows[1]->id = "src/secret/k3/encode2shadow.bmp";
-        shadows[2]->id = "src/secret/k3/encode3shadow.bmp";
+        shadows[0]->id = "resources/k3/encode1shadow.bmp";
+        shadows[1]->id = "resources/k3/encode2shadow.bmp";
+        shadows[2]->id = "resources/k3/encode3shadow.bmp";
         write_image(shadows[0]);
         write_image(shadows[1]);
         write_image(shadows[2]);

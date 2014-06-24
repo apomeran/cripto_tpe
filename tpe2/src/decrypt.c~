@@ -157,6 +157,8 @@ void decrypt_bytes_k3(image_t * img, image_t ** imgs, int index, int image_qty) 
 			polynomials[i][3] = binary_to_integer(aux);
     }
 
+while(1);
+
     for (i = 0; i < image_qty; i++) {
         unsigned char first_mod_inverse = inverse(polynomials[i][0]);
         for (j = 0; j < 4; j++) {
