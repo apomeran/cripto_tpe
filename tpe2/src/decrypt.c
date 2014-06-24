@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "common.h"
 #include "decrypt.h"
 #include "file.h"
@@ -13,12 +14,25 @@ void decrypt_bytes_k3(image_t * secret_image, image_t ** images, int index, int 
 
 image_t * decrypt(char * directory, int k, char * img_name) {
 
-	image_t ** images = read_images_from_dir(directory, IMG_MAX);
-	int image_qty = 0;
+	struct dirent* p_dirent;
+  DIR* dir;
+	dir = opendir(directory);
+  int image_qty = 0;
+	image_t * images[IMG_MAX];
+	char * path;
 
-	while (images[image_qty]) {
-		image_qty++;
-	}
+	assure(dir != NULL, "Problem opening directory, check your sintax.\n");
+  while ((p_dirent = readdir(dir)) != NULL) {
+ 	 	if(strstr(p_dirent->d_name, ".bmp") && image_qty < IMG_MAX) {
+ 	 		path = calloc(strlen(directory) + strlen(p_dirent->d_name) + 2, 1);
+        strcpy(path, directory);
+        strcat(path, "/");
+        strcat(path, p_dirent->d_name);
+        images[image_qty++] = read_image(path);
+        free(path);
+ 	 	}
+  }
+  closedir(dir);
 
   assure(image_qty >= k, "You didn't provide the necessary amount of pics.\n");
 
